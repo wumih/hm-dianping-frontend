@@ -58,7 +58,7 @@
   <div class="content">
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="笔记" name="1">
-        <div v-for="b in blogs" :key="b.id" class="blog-item">
+        <div v-for="b in blogs" :key="b.id" class="blog-item" @click="toBlogDetail(b)">
           <div class="blog-img"><img :src="b.images.split(',')[0]" alt=""></div>
           <div class="blog-info">
             <div class="blog-title">{{b.title}}</div>
@@ -68,15 +68,15 @@
         </div>
       </el-tab-pane>
       <el-tab-pane label="评价" name="2">评价</el-tab-pane>
-      <el-tab-pane label="粉丝(0)" name="3">粉丝(0)</el-tab-pane>
-      <el-tab-pane label="关注(0)" name="4">
+      <el-tab-pane :label="'粉丝(' + (info.fans || 0) + ')'" name="3">粉丝</el-tab-pane>
+      <el-tab-pane :label="'关注(' + (info.followee || 0) + ')'" name="4">
         <div class="blog-list" @scroll="onScroll">
           <div class="blog-box" v-for="b in blogs2" :key="b.id">
             <div class="blog-img2" @click="toBlogDetail(b)"><img :src="b.img" alt=""></div>
-            <div class="blog-title">{{b.title}}</div>
+            <div class="blog-title" @click="toBlogDetail(b)">{{b.title}}</div>
             <div class="blog-foot">
-              <div class="blog-user-icon"><img :src="b.icon || '/imgs/icons/default-icon.png'" alt=""></div>
-              <div class="blog-user-name">{{b.name}}</div>
+              <div class="blog-user-icon" @click="toOtherInfo(b)"><img :src="b.icon || '/imgs/icons/default-icon.png'" alt=""></div>
+              <div class="blog-user-name" @click="toOtherInfo(b)">{{b.name}}</div>
               <div class="blog-liked" @click="addLike(b)">
                 <svg t="1646634642977" class="icon" viewBox="0 0 1024 1024" version="1.1"
                      xmlns="http://www.w3.org/2000/svg" p-id="2187" width="14" height="14">
@@ -120,6 +120,14 @@
       this.queryUser();
     },
     methods: {
+      toOtherInfo(b) {
+        if(b.userId && b.userId !== this.user.id) {
+          location.href = "/other-info.html?id=" + b.userId;
+        }
+      },
+      toBlogDetail(b) {
+        location.href = "/blog-detail.html?id=" + b.id;
+      },
       load() {
         this.count += 2;
       },

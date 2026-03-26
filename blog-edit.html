@@ -17,9 +17,14 @@
 <div id="app">
   <div class="header">
     <div class="header-cancel-btn" @click="goBack">取消</div>
-    <div class="header-title">&nbsp;&nbsp;发笔记<i class="el-icon-info"></i></div>
+    <div class="header-title">&nbsp;&nbsp;{{ isEditMode ? '编辑笔记' : '发笔记' }}<i class="el-icon-info"></i></div>
     <div class="header-commit">
-      <div class="header-commit-btn" @click="submitBlog">发布</div>
+      <div
+          class="header-commit-btn"
+          v-if="!isEditMode || (user && user.id === params.userId)"
+          @click="submitBlog">
+        {{ isEditMode ? '保存' : '发布' }}
+      </div>
     </div>
   </div>
   <div class="upload-box">
@@ -84,7 +89,15 @@
       return {
         util,
         fileList: [], // 文件列表
-        params: {},
+        params: {
+          id: null,
+          title: "",
+          content: "",
+          userId: null
+        },
+        user: {},
+        blogId: null,
+        isEditMode: false,
         showDialog: false, //
         shops: [], // 商户信息
         shopName: "", //商户名称
@@ -92,10 +105,42 @@
       }
     },
     created() {
-      this.checkLogin();
+      this.checkLogin(() => {
+        this.initMode();
+      });
       this.queryShops();
     },
     methods: {
+      initMode() {
+        const id = util.getUrlParam("id");
+        if (!id) return;
+        this.blogId = id;
+        this.isEditMode = true;
+        this.queryBlogById(id);
+      },
+      queryBlogById(id) {
+        axios.get("/blog/" + id)
+          .then(({data}) => {
+            if (data && data.success === false) {
+              this.$message.error(data.errorMsg || "获取博客失败");
+              return;
+            }
+            const blog = data && data.data ? data.data : data;
+            if (!blog || !blog.id) {
+              this.$message.error("博客不存在或已删除");
+              return;
+            }
+            this.params.id = blog.id;
+            this.params.title = blog.title || "";
+            this.params.content = blog.content || "";
+            this.params.userId = blog.userId || null;
+            this.fileList = blog.images ? blog.images.split(",") : [];
+            if (blog.shopId) {
+              this.selectedShop = {id: blog.shopId, name: blog.shopName || ""};
+            }
+          })
+          .catch(err => this.$message.error((err && err.message) || "获取博客失败"));
+      },
       queryShops() {
         axios.get("/shop/of/name?name=" + this.shopName)
           .then(({data}) => this.shops = data)
@@ -106,12 +151,38 @@
         this.showDialog = false;
       },
       submitBlog() {
+        if (!this.params.title || !this.params.content) {
+          this.$message.error("标题和内容不能为空");
+          return;
+        }
+        if (this.isEditMode && this.user && this.params.userId && this.user.id !== this.params.userId) {
+          this.$message.error("您没有权限修改他人的博客！");
+          return;
+        }
         let {...data} = this.params;
         data.images = this.fileList.join(",");
-        data.shopId = this.selectedShop.id;
-        axios.post("/blog", data)
-          .then(resp => location.href = "/info.html")
-          .catch(this.$message.error)
+        if (!this.isEditMode) {
+          data.shopId = this.selectedShop.id;
+        }
+        const request = this.isEditMode ? axios.put("/blog", data) : axios.post("/blog", data);
+        request
+          .then((res) => {
+            if (res.data && res.data.success === false) {
+              this.$message.error(res.data.errorMsg || (this.isEditMode ? "修改失败" : "发布失败"));
+              return;
+            }
+            this.$message.success(this.isEditMode ? "修改成功！" : "发布成功！");
+            setTimeout(() => {
+              if (this.isEditMode) {
+                history.back();
+              } else {
+                location.href = "/info.html";
+              }
+            }, 300);
+          })
+          .catch((err) => {
+            this.$message.error((err && err.message) || (this.isEditMode ? "修改失败" : "发布失败"));
+          });
       },
       openFileDialog() {
         this.$refs.fileInput.click();
@@ -133,7 +204,7 @@
           .then(() => this.fileList.splice(i, 1))
           .catch(this.$message.error)
       },
-      checkLogin() {
+      checkLogin(cb) {
         // 获取token
         let token = sessionStorage.getItem("token");
         if (!token) {
@@ -141,10 +212,15 @@
         }
         // 查询用户信息
         axios.get("/user/me")
-          .then()
+          .then(({data}) => {
+            this.user = data;
+            if (cb) cb();
+          })
           .catch(err => {
             this.$message.error(err);
-            setTimeout(() => location.href = "login.html", 200)
+            if (err === "请先登录") {
+              setTimeout(() => location.href = "login.html", 200);
+            }
           })
       },
       goBack() {
