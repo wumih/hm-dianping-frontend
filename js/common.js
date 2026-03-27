@@ -4,9 +4,9 @@ let commonURL = "/api";
 axios.defaults.baseURL = commonURL;
 axios.defaults.timeout = 2000;
 // request拦截器，将用户token放入头中
-let token = sessionStorage.getItem("token");
 axios.interceptors.request.use(
   config => {
+    const token = sessionStorage.getItem("token");
     if(token) config.headers['authorization'] = token
     return config
   },
@@ -24,7 +24,7 @@ axios.interceptors.response.use(function (response) {
 }, function (error) {
   // 一般是服务端异常或者网络异常
   console.log(error)
-  if(error.response.status == 401){
+  if(error && error.response && error.response.status == 401){
     // 未登录，跳转
     setTimeout(() => {
       location.href = "/login.html"

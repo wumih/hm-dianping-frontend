@@ -46,6 +46,9 @@
       <div class="edit-btn" @click="toEdit">
         编辑资料
       </div>
+      <div class="edit-btn" style="margin-left: 10px; background: #409EFF;" @click="setPassword">
+        设置密码
+      </div>
     </div>
     <div class="logout-btn" @click="logout">
       退出登录
@@ -191,6 +194,45 @@
       },
       toEdit() {
         location.href = 'info-edit.html'
+      },
+      setPassword() {
+        const cachedPhone = sessionStorage.getItem("loginPhone");
+        const phone = (this.user && this.user.phone) || cachedPhone;
+        const askPassword = (targetPhone) => {
+          this.$prompt("请输入新密码", "设置密码", {
+            confirmButtonText: "确定",
+            cancelButtonText: "取消",
+            inputType: "password",
+            inputValidator: (val) => {
+              if (!val) return "新密码不能为空";
+              if (val.length < 6) return "密码至少 6 位";
+              return true;
+            }
+          }).then(({ value }) => {
+            axios.post("/user/password?phone=" + targetPhone + "&newPassword=" + encodeURIComponent(value))
+              .then(() => {
+                this.$message.success("设置成功");
+              })
+              .catch(err => this.$message.error(err || "设置失败"));
+          }).catch(() => {});
+        };
+        if (phone) {
+          askPassword(phone);
+          return;
+        }
+        this.$prompt("未获取到手机号，请手动输入登录手机号", "补全手机号", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          inputValue: "",
+          inputValidator: (val) => {
+            if (!val) return "手机号不能为空";
+            if (!/^1\d{10}$/.test(val)) return "请输入正确的手机号";
+            return true;
+          }
+        }).then(({ value }) => {
+          sessionStorage.setItem("loginPhone", value);
+          askPassword(value);
+        }).catch(() => {});
       },
       logout() {
         axios.post("/user/logout")

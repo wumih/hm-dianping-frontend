@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -33,7 +33,7 @@
         </el-input>
         <div style="text-align: center; color: #8c939d;margin: 5px 0">未注册的手机号码验证后自动创建账户</div>
         <el-button @click="login" style="width: 100%; background-color:#f63; color: #fff;">登录</el-button>
-        <div style="text-align: right; color:#333333; margin: 5px 0"><a href="/login2.html">密码登录</a></div>
+        <div style="text-align: right; color:#333333; margin: 5px 0"><a href="/login-password.html">密码登录</a></div>
       </div>
       <div class="login-radio">
         <div>
@@ -82,6 +82,7 @@
             if(data){
               // 保存用户信息到session
               sessionStorage.setItem("token", data);
+              sessionStorage.setItem("loginPhone", this.form.phone || "");
             }
             // 跳转到首页
             location.href = "/index.html"
@@ -97,12 +98,13 @@
           return;
         }
         // 发送验证码
-        axios.post("/user/code?phone="+this.form.phone)
-          .then(() => {})
-          .catch(err => {
-            console.log(err);
-            this.$message.error(err)
-          });
+       axios.post("/user/code?phone=" + this.form.phone)
+        .then(({ data }) => {
+          if (data) {
+            this.form.code = data;
+            this.$message.success("验证码：" + data + "（已自动填入）");
+          }
+        });
         // 禁用按钮
         this.disabled = true;
         // 按钮倒计时
