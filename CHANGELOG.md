@@ -6,6 +6,37 @@
 
 ---
 
+## [v1.4.0] - 2026-03-28 | 登录流程优化与密码设置功能
+
+### ✨ 新增功能
+
+#### 1. 设置密码功能 (`info.html`)
+- **新增** 页面右上角"设置密码"按钮（蓝色），绑定 `@click="setPassword"` 事件。
+- **`setPassword()` 方法实现**：
+  - 优先从 `this.user.phone` 获取手机号，兜底读取 `sessionStorage.getItem("loginPhone")`。
+  - 弹出 Element UI `$prompt` 对话框，输入类型为密码，支持 6 位以上校验。
+  - 调用后端 `POST /user/password?phone=xxx&newPassword=xxx` 接口完成密码设置。
+  - 若未获取到手机号，先弹出对话框让用户手动输入。
+
+#### 2. 独立密码登录页面 (`login-password.html`)
+- **新增** 独立的密码登录页面 `login-password.html`，支持手机号 + 密码登录。
+- 手机号登录页 (`login.html`) 底部链接更新指向 `login-password.html`。
+
+### 🔧 重构
+
+#### Token 动态读取 (`js/common.js`)
+- **修复**：将 Axios 请求拦截器中的 Token 获取方式从全局变量改为动态读取。
+- **原因**：原写法在页面加载时一次性读取 `sessionStorage.getItem("token")`，若用户登录状态在页面存活期间变化，拦截器无法感知。
+- **改动**：`const token = sessionStorage.getItem("token")` 移至拦截器内部，每次请求时实时读取。
+
+#### 登录后手机号缓存 (`login.html`)
+- **优化**：登录成功后，将用户输入的手机号缓存至 `sessionStorage.setItem("loginPhone", phone)`，供后续"设置密码"等功能使用。
+
+#### 错误拦截器空值保护 (`js/common.js`)
+- **修复**：在 401 未授权跳转逻辑前增加 `error.response` 空值检查，防止后端响应超时导致 JS 报错。
+
+---
+
 ## [v1.3.0] - 2026-03-27 | 个人主页完整交互闭环
 
 ### ✨ 新增功能
