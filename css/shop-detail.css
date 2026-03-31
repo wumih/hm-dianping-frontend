@@ -25,6 +25,10 @@
     font-size: 24px;
     font-weight: bold;
 }
+.header-back-btn,
+.voucher-btn {
+    cursor: pointer;
+}
 
 .header-title {
     width: 80%;

@@ -4,48 +4,40 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
   <title>黑马点评</title>
-  <!-- 引入样式 -->
   <link rel="stylesheet" href="./css/element.css">
   <link href="./css/main.css" rel="stylesheet">
   <link href="./css/info.css" rel="stylesheet">
 
   <style type="text/css">
-
+    .save-btn {
+      position: fixed; bottom: 70px; left: 50%;
+      transform: translateX(-50%);
+      width: 90%; max-width: 400px;
+      background-color: #f63; color: #fff;
+      border: none; border-radius: 24px;
+      height: 44px; font-size: 16px; cursor: pointer;
+    }
   </style>
 </head>
 <body>
 <div id="app">
   <div class="header">
-    <div class="header-back-btn" @click="goBack" ><i class="el-icon-arrow-left"></i></div>
+    <div class="header-back-btn" @click="goBack"><i class="el-icon-arrow-left"></i></div>
     <div class="header-title">资料编辑&nbsp;&nbsp;&nbsp;</div>
   </div>
   <div class="edit-container">
     <div class="info-box">
       <div class="info-item">
-        <div class="info-label">头像</div>
-        <div class="info-btn">
-          <img width="35" :src="user.icon || '/imgs/icons/default-icon.png'" alt="">
-          <div><i class="el-icon-arrow-right"></i></div>
-        </div>
-      </div>
-      <div class="divider"></div>
-      <div class="info-item">
         <div class="info-label">昵称</div>
         <div class="info-btn">
-          <div>{{user.nickName}}</div>
-          <div>
-            <i class="el-icon-arrow-right"></i>
-          </div>
+          <el-input v-model="user.nickName" placeholder="请输入昵称" style="width:200px"></el-input>
         </div>
       </div>
       <div class="divider"></div>
       <div class="info-item">
         <div class="info-label">个人介绍</div>
         <div class="info-btn">
-          <div style="overflow: hidden; width: 150px;text-align: right">{{info.introduce || '介绍一下自己'}}</div>
-          <div>
-            <i class="el-icon-arrow-right"></i>
-          </div>
+          <el-input v-model="info.introduce" placeholder="介绍一下自己" style="width:200px"></el-input>
         </div>
       </div>
     </div>
@@ -53,84 +45,82 @@
       <div class="info-item">
         <div class="info-label">性别</div>
         <div class="info-btn">
-          <div>{{info.gender || '选择'}}</div>
-          <div><i class="el-icon-arrow-right"></i></div>
+          <el-select v-model="info.gender" placeholder="请选择" style="width:200px">
+            <el-option label="男" :value="false"></el-option>
+            <el-option label="女" :value="true"></el-option>
+          </el-select>
         </div>
       </div>
       <div class="divider"></div>
       <div class="info-item">
         <div class="info-label">城市</div>
         <div class="info-btn">
-          <div>{{info.city || '选择'}}</div>
-          <div><i class="el-icon-arrow-right"></i></div>
+          <el-input v-model="info.city" placeholder="请输入城市" style="width:200px"></el-input>
         </div>
       </div>
       <div class="divider"></div>
       <div class="info-item">
         <div class="info-label">生日</div>
         <div class="info-btn">
-          <div>{{info.birthday || '添加'}}</div>
-          <div><i class="el-icon-arrow-right"></i></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="info-box">
-      <div class="info-item">
-        <div class="info-label">我的积分</div>
-        <div class="info-btn">
-          <div>查看积分</div>
-          <div><i class="el-icon-arrow-right"></i></div>
-        </div>
-      </div>
-      <div class="divider"></div>
-      <div class="info-item">
-        <div class="info-label">会员等级</div>
-        <div class="info-btn">
-          <div><a href="javascript:void(0)">成为VIP尊享特权</a></div>
-          <div><i class="el-icon-arrow-right"></i></div>
+          <el-date-picker v-model="info.birthday" type="date" placeholder="选择生日"
+            value-format="yyyy-MM-dd" style="width:200px">
+          </el-date-picker>
         </div>
       </div>
     </div>
   </div>
+
+  <button class="save-btn" @click="save">保存</button>
   <foot-bar :active-btn="4"></foot-bar>
 </div>
 <script src="./js/vue.js"></script>
 <script src="./js/axios.min.js"></script>
-<!-- 引入组件库 -->
 <script src="./js/element.js"></script>
 <script src="./js/common.js"></script>
 <script src="./js/footer.js"></script>
 <script>
-
   const app = new Vue({
     el: "#app",
     data: {
-      user: "",
-      info: {},
+      user: { nickName: "", icon: "" },
+      info: { introduce: "", city: "", gender: null, birthday: null },
     },
     created() {
       this.checkLogin();
     },
     methods: {
       checkLogin() {
-        // 查询用户信息
         axios.get("/user/me")
-        .then(({data}) => {
-          this.user = data;
-          this.info = JSON.parse(sessionStorage.getItem("userInfo")) || {}
-        })
-        .catch(err => {
-          this.$message.error(err);
-          setTimeout(() => location.href = "login.html", 1000)
-        })
+          .then(({data}) => {
+            this.user = data;
+            const cached = JSON.parse(sessionStorage.getItem("userInfo") || "{}");
+            this.info = cached;
+          })
+          .catch(() => {
+            setTimeout(() => location.href = "login.html", 1000);
+          });
       },
-      goBack(){
+      save() {
+        const p1 = axios.put("/user/me", { nickName: this.user.nickName, icon: this.user.icon });
+        const p2 = axios.put("/user/info", this.info);
+        Promise.all([p1, p2])
+          .then(() => {
+            this.$message.success("保存成功！");
+            sessionStorage.removeItem("userInfo");
+            setTimeout(() => history.back(), 1000);
+          })
+          .catch(err => {
+            const msg = err && err.response && err.response.data
+              ? err.response.data.errorMsg || "保存失败"
+              : "保存失败";
+            this.$message.error(msg);
+          });
+      },
+      goBack() {
         history.back();
       }
-    },
-
-  })
+    }
+  });
 </script>
 </body>
 </html>

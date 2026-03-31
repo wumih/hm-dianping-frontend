@@ -4,6 +4,9 @@
 }
 #app{
     background-color: #f1f1f1;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 .header{
     width: 100%;
@@ -24,6 +27,11 @@
     text-align: center;
     font-size: 18px;
     font-family: Hiragino Sans GB,Arial,Helvetica,"\5B8B\4F53",sans-serif;
+}
+.header-back-btn,
+.sort-item,
+.shop-box {
+    cursor: pointer;
 }
 .header-search {
     width: 10%;
@@ -48,7 +56,8 @@
     font-size: 12px;
 }
 .shop-list{
-    height: 87%;
+    flex: 1;
+    min-height: 0;
     background-color: #f1f1f1;
     overflow-y: auto;
 }

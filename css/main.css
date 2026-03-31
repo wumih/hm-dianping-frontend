@@ -8,6 +8,9 @@ body{
 html,body,#app{
     height: 100%;
 }
+a, button, [role="button"] {
+    cursor: pointer;
+}
 
 .el-tabs__item {
     font-size: 14px;

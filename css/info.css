@@ -18,6 +18,21 @@
     font-size: 18px;
     font-family: Hiragino Sans GB,Arial,Helvetica,"\5B8B\4F53",sans-serif;
 }
+.header-back-btn,
+.edit-btn,
+.logout-btn,
+.info-box,
+.blog-item,
+.blog-img2,
+.blog-box .blog-title,
+.blog-user-icon,
+.blog-user-name,
+.blog-foot .blog-liked,
+.follow-info-icon,
+.follow-info-btn,
+.internal-link {
+    cursor: pointer;
+}
 .basic{
     height: 15%;
     display: flex;

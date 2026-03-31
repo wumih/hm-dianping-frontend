@@ -12,6 +12,11 @@
     /*width: 2%;*/
     font-size: 14px;
 }
+.header-icon,
+.type-box,
+.blog-img {
+    cursor: pointer;
+}
 .search-input{
     width: 70%;
 }

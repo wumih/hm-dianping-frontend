@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <title>新增秒杀券</title>
+  <link rel="stylesheet" href="./css/element.css">
+  <style>
+    body {
+      margin: 0;
+      background: #f5f7fa;
+      font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+    #app {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      box-sizing: border-box;
+    }
+    .page-card {
+      width: 100%;
+      max-width: 520px;
+      background: #fff;
+      border-radius: 12px;
+      padding: 18px 16px;
+      box-sizing: border-box;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+    }
+    .title {
+      margin: 0 0 14px;
+      font-size: 20px;
+      font-weight: 600;
+      color: #303133;
+      text-align: center;
+    }
+    .submit-wrap {
+      margin-top: 10px;
+    }
+    .el-button--primary {
+      background: #f63;
+      border-color: #f63;
+    }
+    .el-button--primary:hover,
+    .el-button--primary:focus {
+      background: #ff7f45;
+      border-color: #ff7f45;
+    }
+    .tips {
+      margin-top: 10px;
+      color: #909399;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div class="page-card">
+    <h1 class="title">新增秒杀代金券</h1>
+
+    <el-form
+      ref="voucherForm"
+      :model="form"
+      :rules="rules"
+      label-position="top"
+      size="small"
+    >
+      <el-form-item label="商铺ID" prop="shopId">
+        <el-input-number v-model="form.shopId" :min="1" :step="1" style="width: 100%;"></el-input-number>
+      </el-form-item>
+
+      <el-form-item label="券标题" prop="title">
+        <el-input v-model.trim="form.title" maxlength="50" show-word-limit placeholder="请输入券标题"></el-input>
+      </el-form-item>
+
+      <el-form-item label="券副标题" prop="subTitle">
+        <el-input v-model.trim="form.subTitle" maxlength="100" show-word-limit placeholder="请输入券副标题"></el-input>
+      </el-form-item>
+
+      <el-form-item label="使用规则" prop="rulesText">
+        <el-input
+          type="textarea"
+          :rows="4"
+          maxlength="500"
+          show-word-limit
+          v-model.trim="form.rulesText"
+          placeholder="请输入使用规则，支持换行"
+        ></el-input>
+      </el-form-item>
+
+      <el-form-item label="支付金额（元）" prop="payValueYuan">
+        <el-input-number
+          v-model="form.payValueYuan"
+          :min="0.01"
+          :step="0.01"
+          :precision="2"
+          style="width: 100%;"
+        ></el-input-number>
+      </el-form-item>
+
+      <el-form-item label="抵扣面值（元）" prop="actualValueYuan">
+        <el-input-number
+          v-model="form.actualValueYuan"
+          :min="0.01"
+          :step="0.01"
+          :precision="2"
+          style="width: 100%;"
+        ></el-input-number>
+      </el-form-item>
+
+      <el-form-item label="发行库存数量" prop="stock">
+        <el-input-number
+          v-model="form.stock"
+          :min="1"
+          :step="1"
+          style="width: 100%;"
+        ></el-input-number>
+      </el-form-item>
+
+      <el-form-item label="生效时间" prop="beginTime">
+        <el-date-picker
+          v-model="form.beginTime"
+          type="datetime"
+          placeholder="请选择生效时间"
+          style="width: 100%;"
+        ></el-date-picker>
+      </el-form-item>
+
+      <el-form-item label="失效时间" prop="endTime">
+        <el-date-picker
+          v-model="form.endTime"
+          type="datetime"
+          placeholder="请选择失效时间"
+          style="width: 100%;"
+        ></el-date-picker>
+      </el-form-item>
+
+      <div class="submit-wrap">
+        <el-button
+          type="primary"
+          :loading="submitting"
+          @click="submitForm"
+          style="width: 100%;"
+        >确认添加</el-button>
+      </div>
+    </el-form>
+
+    <div class="tips">
+      提交时会自动将“元”转换为“分”并固定传 type=1。
+    </div>
+  </div>
+</div>
+
+<script src="./js/vue.js"></script>
+<script src="./js/axios.min.js"></script>
+<script src="./js/element.js"></script>
+<script src="./js/common.js"></script>
+<script>
+  new Vue({
+    el: '#app',
+    data() {
+      return {
+        submitting: false,
+        form: {
+          shopId: null,
+          title: '',
+          subTitle: '',
+          rulesText: '',
+          payValueYuan: null,
+          actualValueYuan: null,
+          stock: null,
+          beginTime: null,
+          endTime: null
+        },
+        rules: {
+          shopId: [{ required: true, message: '请输入商铺ID', trigger: 'change' }],
+          title: [{ required: true, message: '请输入券标题', trigger: 'blur' }],
+          subTitle: [{ required: true, message: '请输入券副标题', trigger: 'blur' }],
+          rulesText: [{ required: true, message: '请输入使用规则', trigger: 'blur' }],
+          payValueYuan: [{ required: true, message: '请输入支付金额', trigger: 'change' }],
+          actualValueYuan: [{ required: true, message: '请输入抵扣面值', trigger: 'change' }],
+          stock: [{ required: true, message: '请输入发行库存数量', trigger: 'change' }],
+          beginTime: [{ required: true, message: '请选择生效时间', trigger: 'change' }],
+          endTime: [{ required: true, message: '请选择失效时间', trigger: 'change' }]
+        }
+      };
+    },
+    methods: {
+      yuanToFen(value) {
+        return Math.round(Number(value) * 100);
+      },
+      formatDateTime(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const hour = String(date.getHours()).padStart(2, '0');
+        const minute = String(date.getMinutes()).padStart(2, '0');
+        const second = String(date.getSeconds()).padStart(2, '0');
+        return year + '-' + month + '-' + day + 'T' + hour + ':' + minute + ':' + second;
+      },
+      submitForm() {
+        this.$refs.voucherForm.validate((valid) => {
+          if (!valid) return;
+          if (this.form.beginTime.getTime() >= this.form.endTime.getTime()) {
+            this.$message.error('失效时间必须晚于生效时间');
+            return;
+          }
+
+          const payload = {
+            shopId: Number(this.form.shopId),
+            title: this.form.title,
+            subTitle: this.form.subTitle,
+            rules: this.form.rulesText,
+            payValue: this.yuanToFen(this.form.payValueYuan),
+            actualValue: this.yuanToFen(this.form.actualValueYuan),
+            type: 1,
+            stock: Number(this.form.stock),
+            beginTime: this.formatDateTime(this.form.beginTime),
+            endTime: this.formatDateTime(this.form.endTime)
+          };
+
+          this.submitting = true;
+          axios.post('/voucher/seckill', payload)
+            .then(() => {
+              this.$message.success('秒杀券发布成功！库存已预热至 Redis');
+              this.$refs.voucherForm.resetFields();
+            })
+            .catch((err) => {
+              const msg = (err && err.response && err.response.data && err.response.data.errorMsg) || err.message || '发布失败，请稍后重试';
+              this.$alert(msg, '发布失败', { type: 'error' });
+            })
+            .finally(() => {
+              this.submitting = false;
+            });
+        });
+      }
+    }
+  });
+</script>
+</body>
+</html>

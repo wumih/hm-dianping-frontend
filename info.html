@@ -55,8 +55,24 @@
     </div>
   </div>
   <div class="introduce">
-    <span v-if="info.introduce"></span>
+    <span v-if="info.introduce">{{info.introduce}}</span>
     <span v-else>添加个人简介，让大家更好的认识你 <i class="el-icon-edit"></i></span>
+  </div>
+  <!-- 城市 / 性别 / 生日 展示行 -->
+  <div class="introduce" style="font-size:12px; color:#888; margin-top:4px; display:flex; gap:12px; flex-wrap:wrap;">
+    <span v-if="info.city"><i class="el-icon-location-outline"></i> {{info.city}}</span>
+    <span v-if="info.gender !== null && info.gender !== undefined">
+      <i class="el-icon-user"></i> {{info.gender ? '女' : '男'}}
+    </span>
+    <span v-if="info.birthday"><i class="el-icon-date"></i> {{info.birthday}}</span>
+  </div>
+  <div class="info-box" @click="toOrderList">
+    <div class="info-item">
+      <div>全部订单</div>
+      <div class="info-btn">
+        <div><i class="el-icon-arrow-right"></i></div>
+      </div>
+    </div>
   </div>
   <div class="content">
     <el-tabs v-model="activeName" @tab-click="handleClick">
@@ -94,6 +110,9 @@
         </div>
       </el-tab-pane>
     </el-tabs>
+  </div>
+  <div class="internal-link" style="text-align:center; font-size:12px; color:#999; padding:6px 0 2px;" @click="toAddVoucher">
+    【内部通道】模拟商家控制台
   </div>
   <foot-bar :active-btn="4"></foot-bar>
 </div>
@@ -176,6 +195,12 @@
       },
       goBack() {
         history.back();
+      },
+      toOrderList() {
+        location.href = "/order-list.html";
+      },
+      toAddVoucher() {
+        location.href = "/add-voucher.html";
       },
       queryUserInfo() {
         axios.get("/user/info/" + this.user.id)

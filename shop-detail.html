@@ -197,7 +197,9 @@
       isEnd(v){
         return new Date(v.endTime).getTime() < new Date().getTime();
       },
+
       seckill(v){
+        let token = sessionStorage.getItem("token");
         if(!token){
           this.$message.error("请先登录")
           // 未登录，跳转
