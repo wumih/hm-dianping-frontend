@@ -137,6 +137,29 @@
   <div class="copyright">
     copyright ©2021 hmdp.com
   </div>
+
+  <!-- 一键回首页 悬浮球 -->
+  <div class="global-home-fab" @click="goHome" style="
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 48px;
+    height: 48px;
+    background-color: rgba(255, 255, 255, 0.95);
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 26px;
+    color: #ff6633;
+    z-index: 9999;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  ">
+    <i class="el-icon-s-home"></i>
+  </div>
 </div>
 <script src="./js/vue.js"></script>
 <script src="./js/axios.min.js"></script>
@@ -163,6 +186,9 @@
     methods: {
       goBack() {
         history.back();
+      },
+      goHome() {
+        window.location.replace("/index.html");
       },
       queryShopById(shopId) {
         axios.get("/shop/" + shopId)

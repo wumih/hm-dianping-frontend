@@ -67,9 +67,31 @@
         <div class="shop-address shop-item">
           <i class="el-icon-map-location"></i>
           <span>{{s.address}}</span>
-        </div>
       </div>
     </div>
+  </div>
+
+  <!-- 一键回首页 悬浮球 -->
+  <div class="global-home-fab" @click="goHome" style="
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 48px;
+    height: 48px;
+    background-color: rgba(255, 255, 255, 0.95);
+    border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 26px;
+    color: #609981;
+    z-index: 9999;
+    cursor: pointer;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  ">
+    <i class="el-icon-s-home"></i>
   </div>
 </div>
 <script src="./js/vue.js"></script>
@@ -156,6 +178,9 @@
       },
       goBack() {
         history.back();
+      },
+      goHome() {
+        window.location.replace("/index.html");
       },
       toDetail(id) {
         location.href = "/shop-detail.html?id="+id

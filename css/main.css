@@ -8,6 +8,10 @@ body{
 html,body,#app{
     height: 100%;
 }
+/* 全局背景放到独立的伪元素或给特定包裹层，因为原项目强依赖 height: 100% 进行 absolute 定位 */
+body {
+    background-color: #fdfbfb !important;
+}
 a, button, [role="button"] {
     cursor: pointer;
 }
@@ -18,7 +22,7 @@ a, button, [role="button"] {
 }
 .el-tabs__active-bar {
     height: 4px;
-    background-image: linear-gradient(to right, #F63, #f5b9a2);
+    background-image: linear-gradient(to right, #609981, #a3c9b7) !important;
 }
 .foot {
     width: 100%;
@@ -52,7 +56,7 @@ a, button, [role="button"] {
     text-align: center;
 }
 .active{
-    color: #ff6633;
+    color: #609981 !important;
 }
 
 /*element-ui的评价星星间隙*/
@@ -60,3 +64,100 @@ a, button, [role="button"] {
     margin-right: 0;
 }
 
+/* =========================================================
+   UI 焕新爆炸补丁 (莫兰迪绿 + 大圆角 + 悬浮质感版)
+   拦截并覆盖项目中一切默认的丑陋橙红色与直角边框
+   ========================================================= */
+
+/* 1. 莫兰迪绿强行覆盖主色调 */
+[class*="--primary"],
+[class*="--danger"],
+.voucher-btn,
+.publish-btn,
+.search-bar {
+    background-color: #609981 !important;
+    border-color: #609981 !important;
+    color: white !important;
+}
+[class*="--primary"]:hover,
+[class*="--danger"]:hover,
+.voucher-btn:hover {
+    background-color: #4A7D68 !important;
+    border-color: #4A7D68 !important;
+}
+
+/* 用 CSS 滤镜强行将原本的橘红色图片按钮染绿 */
+.add-btn {
+    filter: hue-rotate(135deg) saturate(70%) brightness(90%) !important;
+}
+
+/* 覆盖所有边框和文字颜色 */
+.header, .top-bar {
+    border-bottom: none !important;
+}
+.header-back-btn,
+.header-search,
+.nav-btn,
+.nav-btn i,
+.home-btn,
+.el-icon-arrow-left,
+.voucher-price,
+.seckill-time,
+.el-tabs__item.is-active,
+.foot-view.active i {
+    color: #609981 !important;
+}
+path[fill="#ff6633"] {
+    fill: #609981 !important;
+}
+
+/* 2. 圆角与柔和化方案 */
+/* 按钮、输入框、弹窗全部大圆角 */
+.el-button,
+.el-input__inner,
+.el-textarea__inner,
+.voucher-btn,
+.el-message-box,
+.el-message {
+    border-radius: 20px !important;
+}
+
+/* 3. 卡片悬浮质感 */
+/* 各大详情与列表的卡片边框切除并赋予高级阴影 */
+.shop-box,
+.voucher-box,
+.blog-info-box,
+.comment-box,
+.blog-item {
+    background-color: #fff !important;
+    border: none !important;
+    border-radius: 16px !important;
+    box-shadow: 0 4px 16px rgba(96, 153, 129, 0.08) !important;
+    margin-bottom: 12px !important;
+    padding: 12px !important;
+}
+
+/* 调整原本突出的红色背景 */
+.voucher-box {
+    background-color: #EAF1EE !important; /* 极浅绿 */
+}
+.voucher-price span, .seckill-stock span {
+    background-color: #EAF1EE !important;
+    color: #609981 !important;
+    border-radius: 4px;
+}
+.voucher-icon {
+    background-color: #82b29a !important;
+    border-radius: 4px;
+}
+
+/* 点评的进度条（如打分开头部分）如果存在也强行绿化 */
+.el-progress-bar__inner {
+    background-color: #609981 !important;
+}
+
+/* 悬浮主页球特供圆角 */
+.global-home-fab {
+    box-shadow: 0 4px 12px rgba(96, 153, 129, 0.25) !important;
+    border-radius: 50% !important;
+}
