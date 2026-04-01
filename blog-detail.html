@@ -117,52 +117,45 @@
     <div class="blog-divider"></div>
     <div class="blog-comments">
       <div class="comments-head">
-        <div>网友评价 <span>（119）</span></div>
+        <div>网友评价 <span v-if="comments.length">（{{comments.length}}）</span></div>
         <div><i class="el-icon-arrow-right"></i></div>
       </div>
       <div class="comment-list">
-        <div class="comment-box" v-for="i in 3" :key="i">
+        <div class="comment-box" v-for="c in comments" :key="c.id" style="border-bottom: 1px solid #f1f1f1; padding-bottom: 10px; margin-bottom: 10px;">
           <div class="comment-icon">
-            <img
-                src="https://p0.meituan.net/userheadpicbackend/57e44d6eba01aad0d8d711788f30a126549507.jpg%4048w_48h_1e_1c_1l%7Cwatermark%3D0"
-                alt="">
+            <img :src="c.icon || '/imgs/icons/default-icon.png'" alt="">
           </div>
           <div class="comment-info">
-            <div class="comment-user">叶小乙 <span>Lv5</span></div>
-            <div style="display: flex;">
-              打分
-              <el-rate disabled v-model="4.5"></el-rate>
+            <div class="comment-user">
+              {{c.nickname || '匿名用户'}}
+              <span v-if="c.isAuthor" style="background:#ff6633; color:#fff; font-size:10px; padding:2px 4px; border-radius:4px; margin-left:4px;">作者</span>
             </div>
-            <div style="padding: 5px 0; font-size: 14px">
-              某平台上买的券，价格可以当工作餐吃，虽然价格便宜，但是这家店一点都没有...
+            <div style="padding: 5px 0; font-size: 14px; color: #333; line-height: 1.5;">
+              <span v-if="c.answerUserNickname" style="color:#409EFF; cursor: pointer;">回复 @{{c.answerUserNickname}}：</span>
+              {{c.content}}
             </div>
-            <div class="comment-images">
-              <img
-                  src="https://qcloud.dpfile.com/pc/6T7MfXzx7USPIkSy7jzm40qZSmlHUF2jd-FZUL6WpjE9byagjLlrseWxnl1LcbuSGybIjx5eX6WNgCPvcASYAw.jpg"
-                  alt="">
-              <img
-                  src="https://qcloud.dpfile.com/pc/sZ5q-zgglv4VXEWU71xCFjnLM_jUHq-ylq0GKivtrz3JksWQ1f7oBWZsxm1DWgcaGybIjx5eX6WNgCPvcASYAw.jpg"
-                  alt="">
-              <img
-                  src="https://qcloud.dpfile.com/pc/xZy6W4NwuRFchlOi43DVLPFsx7KWWvPqifE1JTe_jreqdsBYA9CFkeSm2ZlF0OVmGybIjx5eX6WNgCPvcASYAw.jpg"
-                  alt="">
-              <img
-                  src="https://qcloud.dpfile.com/pc/xZy6W4NwuRFchlOi43DVLPFsx7KWWvPqifE1JTe_jreqdsBYA9CFkeSm2ZlF0OVmGybIjx5eX6WNgCPvcASYAw.jpg"
-                  alt="">
-            </div>
-            <div>
-              浏览641 &nbsp;&nbsp;&nbsp;&nbsp;评论5
+            <div style="color: #999; font-size: 12px; display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+              <span>{{formatTime(new Date(c.createTime))}}</span>
+              <span style="cursor: pointer; color: #666; padding: 2px 8px; border-radius: 12px; background: #f4f4f5;" @click="replyTo(c)">回复</span>
             </div>
           </div>
         </div>
-        <div
-            style="display: flex; justify-content: space-between;padding: 15px 0; border-top: 1px solid #f1f1f1; margin-top: 10px;">
-          <div>查看全部119条评价</div>
-          <div><i class="el-icon-arrow-right"></i></div>
+        <div v-if="comments.length === 0" style="text-align: center; color: #999; padding: 20px 0; font-size: 13px;">
+          暂无评论，快来抢沙发吧~
         </div>
       </div>
     </div>
     <div class="blog-divider"></div>
+
+    <!-- 评论输入框弹窗 -->
+    <el-dialog :visible.sync="showCommentDialog" width="90%" :title="'留个言吧'" :show-close="false">
+      <el-input v-model="commentText" type="textarea" :rows="4" :placeholder="replyTarget ? '回复 @' + replyTarget.nickname + '：' : '说点什么...' "></el-input>
+      <div slot="footer" class="dialog-footer" style="text-align: right; margin-top: -10px;">
+        <el-button size="small" @click="showCommentDialog = false">取 消</el-button>
+        <el-button size="small" type="primary" @click="submitComment">发 送</el-button>
+      </div>
+    </el-dialog>
+
   </div>
   <div class="foot">
     <div class="foot-box">
@@ -176,7 +169,7 @@
     <div style="width: 40%">
     </div>
     <div class="foot-box">
-      <div class="foot-view"><i class="el-icon-chat-square"></i></div>
+      <div class="foot-view" @click="openCommentDialog()"><i class="el-icon-chat-square"></i></div>
     </div>
   </div>
 </div>
@@ -198,6 +191,10 @@
       blog: {},
       shop: {},
       likes: [],
+      comments: [],
+      showCommentDialog: false,
+      commentText: '',
+      replyTarget: null,
       user: {}, // 登录用户
       followed: false, // 是否关注了
       _width: 0,
@@ -283,6 +280,7 @@
             this.queryShopById(data.shopId)
             this.queryLikeList(id);
             this.queryLoginUser();
+            this.loadComments();
           })
           .catch(this.$message.error)
       },
@@ -345,6 +343,63 @@
             }
           })
           .catch(console.log)
+      },
+      loadComments() {
+        axios.get("/blog/comments/list/" + this.blog.id)
+          .then(({data}) => {
+            this.comments = data || [];
+          })
+          .catch(err => {
+            console.log("加载评论失败", err);
+          })
+      },
+      openCommentDialog() {
+        if (!this.user || !this.user.id) {
+          this.$message.warning("请先登录");
+          setTimeout(() => location.href = "/login.html", 1000);
+          return;
+        }
+        this.replyTarget = null;
+        this.commentText = '';
+        this.showCommentDialog = true;
+      },
+      replyTo(c) {
+        if (!this.user || !this.user.id) {
+          this.$message.warning("请先登录");
+          setTimeout(() => location.href = "/login.html", 1000);
+          return;
+        }
+        this.replyTarget = c;
+        this.commentText = '';
+        this.showCommentDialog = true;
+      },
+      submitComment() {
+        if (!this.commentText.trim()) {
+          this.$message.warning("评论内容不能为空");
+          return;
+        }
+        let payload = {
+          blogId: this.blog.id,
+          content: this.commentText
+        };
+        if (this.replyTarget) {
+          payload.parentId = this.replyTarget.parentId === 0 ? this.replyTarget.id : this.replyTarget.parentId;
+          payload.answerId = this.replyTarget.id;
+        } else {
+          payload.parentId = 0;
+          payload.answerId = 0;
+        }
+        axios.post("/blog/comments/save", payload)
+          .then((res) => {
+            if (res && res.success === false) {
+               this.$message.error(res.errorMsg || "发布失败");
+               return;
+            }
+            this.$message.success("发布成功！");
+            this.showCommentDialog = false;
+            this.loadComments();
+          })
+          .catch(this.$message.error);
       },
       // 获取父容器宽度，并且更新所有的子节点宽度，因为我们默认所有子节点的宽高等于父节点的宽高
       updateItemWidth() {
