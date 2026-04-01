@@ -173,12 +173,12 @@
             current: this.current
           }
         })
-          .then(({data}) => {
-            if (data && data.success === false) {
-              this.$message.error(data.errorMsg || "加载订单失败");
+          .then((res) => {
+            if (res && res.success === false) {
+              this.$message.error(res.errorMsg || "加载订单失败");
               return;
             }
-            const list = data && data.data ? data.data : [];
+            const list = res && res.data ? res.data : [];
             this.orders = Array.isArray(list) ? list : [];
           })
           .catch((err) => {
