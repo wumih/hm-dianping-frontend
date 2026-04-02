@@ -2,7 +2,9 @@
   黑马点评 — 前端 (hmdp)
   说明：此 README 面向前端开发与部署，包含运行、部署、以及与后端解耦和高并发优化建议。
 -->
-
+🔗 **相关项目**：
+- [前端项目仓库](https://github.com/wumih/hm-dianping-frontend.git)
+- [后端项目仓库](https://github.com/wumih/hm-dianping.git)
 # 黑马点评 — 移动端点评平台（前端） 🚀
 
 > 轻量化原生 HTML/JS/CSS 前端，基于 Vue 2.x 风格的开发模式，配合 Spring Boot 后端与 Redis 实战教程，面向高并发、高性能场景。
