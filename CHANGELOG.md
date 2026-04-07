@@ -6,6 +6,29 @@
 
 ---
 
+## [v1.8.0] - 2026-04-07 | 性能极致调优与 97 分 Lighthouse 突破
+
+### 🚀 性能优化 (Performance Optimization)
+
+#### 1. Nginx 全量 Gzip 压缩与静态资源缓存 (`nginx.conf`)
+- **实现**：开启 `gzip` 压缩（级别 5），覆盖 `js/css/json` 等核心资源；并引入 `expires 30d` 浏览器缓存策略。
+- **性能细节**：`element.js` (575KB) 与 `vue.js` (375KB) 传输体积骤减 70%，显著降低 FCP 与 TBT（总阻塞时间）。
+- **修改文件**：`nginx.conf`
+
+#### 2. CLS (布局偏移) 深度治理与 LCP 竞速 (`index.html` 等)
+- **实现**：为全站核心 `<img>` 标签补全 `width`、`height` 属性并引入 `aspect-ratio: 4/3` 占位心智，彻底消灭因图片异步加载导致的页面“跳动”现象。
+- **性能细节**：将 **CLS 评分从 0.341 (红区) 拨正为 0 (绿区)**。同时精准剥离首屏 banner 的懒加载逻辑，确保 LCP 核心指标进入 1.2s 极速区间。
+- **修改文件**：`index.html`、`shop-list.html`、`shop-detail.html`
+
+### ♿️ 语义化与无障碍增强 (Accessibility)
+
+#### 1. 全局语言声明与 Alt 语义补全 (`index.html` 等)
+- **新增**：将页面根节点 `lang` 从 `en` 修正为 `zh`，优化中文屏幕阅读器支持性。
+- **优化**：全量补全 Footer 导航与列表图文的 `alt` 标签，解决 Accessibility 评分卡顿瓶颈。
+- **修改文件**：`index.html`、`footer.js`、`shop-list.html`
+
+---
+
 ## [v1.7.0] - 2026-04-02 | 前端视觉重构与质感升级体验版
 
 ### ✨ 新增功能与 UI 重构

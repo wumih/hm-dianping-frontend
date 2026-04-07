@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
@@ -29,16 +29,16 @@
   </div>
   <div class="type-list">
     <div class="type-box" v-for="t in types" :key="t.id" @click="toShopList(t.id, t.name)">
-      <div class="type-view"><img :src="'/imgs/' + t.icon" alt=""></div>
+      <div class="type-view"><img :src="'/imgs/' + t.icon" :alt="t.name" width="100%" height="100%"></div>
       <div class="type-text">{{t.name}}</div>
     </div>
   </div>
   <div class="blog-list" @scroll="onScroll">
     <div class="blog-box" v-for="b in blogs" :key="b.id">
-      <div class="blog-img" @click="toBlogDetail(b)"><img :src="b.img" alt=""></div>
+      <div class="blog-img" @click="toBlogDetail(b)"><img :src="b.img" :alt="b.title" loading="lazy" width="100%" height="auto" style="aspect-ratio: 4/3; object-fit: cover;"></div>
       <div class="blog-title">{{b.title}}</div>
       <div class="blog-foot">
-        <div class="blog-user-icon"><img :src="b.icon || '/imgs/icons/default-icon.png'" alt=""></div>
+        <div class="blog-user-icon"><img :src="b.icon || '/imgs/icons/default-icon.png'" alt="用户头像" loading="lazy" width="20" height="20"></div>
         <div class="blog-user-name">{{b.name}}</div>
         <div class="blog-liked" @click="addLike(b)">
           <svg t="1646634642977" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2187" width="14" height="14">

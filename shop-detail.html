@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
@@ -34,20 +34,20 @@
     </div>
     <div class="shop-rate-info"> 口味:4.9  环境:4.8  服务:4.7 </div>
     <div class="shop-rank">
-      <img src="/imgs/bd.png" width="63" height="20" alt="">
+      <img src="/imgs/bd.png" width="63" height="20" alt="榜单图标">
       <span>拱墅区好评榜第3名</span>
       <div><i class="el-icon-arrow-right"></i></div>
     </div>
     <div class="shop-images">
       <div v-for="(s,i) in shop.images" :key="i">
-        <img :src="s" alt="">
+        <img :src="s" :alt="shop.name + '展示图'" width="100%" height="auto" style="aspect-ratio: 16/9; object-fit: cover;">
       </div>
     </div>
     <div class="shop-address">
       <div><i class="el-icon-map-location"></i></div>
       <span>{{shop.address}}</span>
       <div style="width: 10px; flex-grow: 2; text-align: center; color: #e1e2e3">|</div>
-      <div style="margin: 0 5px"><img src="https://p0.meituan.net/travelcube/bf684aa196c870810655e45b1e52ce843484.png@24w_16h_40q" alt=""></div>
+      <div style="margin: 0 5px"><img src="https://p0.meituan.net/travelcube/bf684aa196c870810655e45b1e52ce843484.png@24w_16h_40q" alt="位置图标"></div>
       <div><img src="https://p0.meituan.net/travelcube/9277ace32123e0c9f59dedf4407892221566.png@24w_24h_40q" alt=""></div>
     </div>
   </div>
@@ -105,7 +105,7 @@
     <div class="comment-list">
       <div class="comment-box" v-for="i in 3" :key="i">
         <div class="comment-icon">
-          <img src="https://p0.meituan.net/userheadpicbackend/57e44d6eba01aad0d8d711788f30a126549507.jpg%4048w_48h_1e_1c_1l%7Cwatermark%3D0" alt="">
+          <img src="https://p0.meituan.net/userheadpicbackend/57e44d6eba01aad0d8d711788f30a126549507.jpg%4048w_48h_1e_1c_1l%7Cwatermark%3D0" alt="用户头像" loading="lazy">
         </div>
         <div class="comment-info">
           <div class="comment-user">叶小乙 <span>Lv5</span></div>
@@ -117,10 +117,10 @@
             某平台上买的券，价格可以当工作餐吃，虽然价格便宜，但是这家店一点都没有...
           </div>
           <div class="comment-images">
-            <img src="https://qcloud.dpfile.com/pc/6T7MfXzx7USPIkSy7jzm40qZSmlHUF2jd-FZUL6WpjE9byagjLlrseWxnl1LcbuSGybIjx5eX6WNgCPvcASYAw.jpg" alt="">
-            <img src="https://qcloud.dpfile.com/pc/sZ5q-zgglv4VXEWU71xCFjnLM_jUHq-ylq0GKivtrz3JksWQ1f7oBWZsxm1DWgcaGybIjx5eX6WNgCPvcASYAw.jpg" alt="">
-            <img src="https://qcloud.dpfile.com/pc/xZy6W4NwuRFchlOi43DVLPFsx7KWWvPqifE1JTe_jreqdsBYA9CFkeSm2ZlF0OVmGybIjx5eX6WNgCPvcASYAw.jpg" alt="">
-            <img src="https://qcloud.dpfile.com/pc/xZy6W4NwuRFchlOi43DVLPFsx7KWWvPqifE1JTe_jreqdsBYA9CFkeSm2ZlF0OVmGybIjx5eX6WNgCPvcASYAw.jpg" alt="">
+            <img src="https://qcloud.dpfile.com/pc/6T7MfXzx7USPIkSy7jzm40qZSmlHUF2jd-FZUL6WpjE9byagjLlrseWxnl1LcbuSGybIjx5eX6WNgCPvcASYAw.jpg" alt="评价图1" loading="lazy">
+            <img src="https://qcloud.dpfile.com/pc/sZ5q-zgglv4VXEWU71xCFjnLM_jUHq-ylq0GKivtrz3JksWQ1f7oBWZsxm1DWgcaGybIjx5eX6WNgCPvcASYAw.jpg" alt="评价图2" loading="lazy">
+            <img src="https://qcloud.dpfile.com/pc/xZy6W4NwuRFchlOi43DVLPFsx7KWWvPqifE1JTe_jreqdsBYA9CFkeSm2ZlF0OVmGybIjx5eX6WNgCPvcASYAw.jpg" alt="评价图3" loading="lazy">
+            <img src="https://qcloud.dpfile.com/pc/xZy6W4NwuRFchlOi43DVLPFsx7KWWvPqifE1JTe_jreqdsBYA9CFkeSm2ZlF0OVmGybIjx5eX6WNgCPvcASYAw.jpg" alt="评价图4" loading="lazy">
           </div>
           <div>
             浏览641 &nbsp;&nbsp;&nbsp;&nbsp;评论5
