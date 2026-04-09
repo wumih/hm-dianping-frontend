@@ -132,7 +132,7 @@ C:\path\to\nginx.exe -s reload
 ---
 133:
 134: **📈 性能与体验优化专项 — 量化指标 (Lighthouse 97分)** ⚡
-[点击在线预览：优化前的 Lighthouse 原始报告](https://htmlpreview.github.io/?url=https://github.com/wumih/hm-dianping-frontend/hm-dianping-before-optimization.html)
+[点击在线预览：优化前的 Lighthouse 原始报告](https://htmlpreview.github.io/?https://github.com/wumih/hm-dianping-frontend/blob/master/hm-dianping-before-optimization.html)
 [点击在线预览：优化后的 Lighthouse 原始报告](https://htmlpreview.github.io/?url=https://github.com/你的名字/你的项目/blob/main/docs/优化之后.html)
 [📊 点击在线预览：Heima Dianping - Before Optimization (Baseline)](https://biyousi20.github.io/hm-dianping-frontend/hm-dianping-before-optimization.html)
 
