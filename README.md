@@ -132,6 +132,9 @@ C:\path\to\nginx.exe -s reload
 ---
 133:
 134: **📈 性能与体验优化专项 — 量化指标 (Lighthouse 97分)** ⚡
+[📊 点击在线预览：Heima Dianping - Before Optimization (Baseline)](https://biyousi20.github.io/hm-dianping-frontend/hm-dianping-before-optimization.html)
+
+[🚀 点击在线预览：Heima Dianping - After Optimization](https://biyousi20.github.io/hm-dianping-frontend/hm-dianping-after-optimization.html)
 135:
 136: 本项目通过全方位的工程化手段，将移动端首页的 Lighthouse 评分从 **75 (中等)** 提升至 **97 (极优)**，实现了质的飞跃。
 137:
