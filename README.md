@@ -130,16 +130,11 @@ C:\path\to\nginx.exe -s reload
 - 秒杀：前端发起抢购请求 -> 后端进行令牌桶/库存校验 -> 后端返回抢购结果；前端仅做状态展示与重试提示，不做核心并发控制。
 
 ---
-133:
-134: **📈 性能与体验优化专项 — 量化指标 (Lighthouse 97分)** ⚡
+ **📈 性能与体验优化专项 — 量化指标 (Lighthouse 97分)** ⚡
 [点击在线预览：优化前的 Lighthouse 原始报告](https://htmlpreview.github.io/?https://github.com/wumih/hm-dianping-frontend/blob/master/hm-dianping-before-optimization.html)
-[点击在线预览：优化后的 Lighthouse 原始报告](https://htmlpreview.github.io/?url=https://github.com/你的名字/你的项目/blob/main/docs/优化之后.html)
-[📊 点击在线预览：Heima Dianping - Before Optimization (Baseline)](https://biyousi20.github.io/hm-dianping-frontend/hm-dianping-before-optimization.html)
-
-[🚀 点击在线预览：Heima Dianping - After Optimization](https://biyousi20.github.io/hm-dianping-frontend/hm-dianping-after-optimization.html)
-135:
-136: 本项目通过全方位的工程化手段，将移动端首页的 Lighthouse 评分从 **75 (中等)** 提升至 **97 (极优)**，实现了质的飞跃。
-137:
+[点击在线预览：优化后的 Lighthouse 原始报告](https://htmlpreview.github.io/?https://github.com/wumih/hm-dianping-frontend/blob/master/hm-dianping-after-optimization.html)
+预览：Heima Dianping - After Optimization](https://biyousi20.github.io/hm-dianping-frontend/hm-dianping-after-optimization.html)
+ 本项目通过全方位的工程化手段，将移动端首页的 Lighthouse 评分从 **75 (中等)** 提升至 **97 (极优)**，实现了质的飞跃。
 | 核心指标 | 优化前 (Base) | 优化后 (Optimized) | 提升幅度 (Delta) | 状态 |
 | :--- | :--- | :--- | :--- | :--- |
 | **Performance** | 75 | **97** | +29% | 🟢 Excellent |
